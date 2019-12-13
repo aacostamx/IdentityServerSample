@@ -1,7 +1,7 @@
 ﻿using AuthApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AuthApi.Controllers
@@ -11,87 +11,78 @@ namespace AuthApi.Controllers
     public class AuthorizeController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthorizeController(
-            RoleManager<IdentityRole> roleManager,
-            SignInManager<ApplicationUser> signInManager,
+        public AuthorizeController(RoleManager<IdentityRole> roleManager, 
             UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
-            _signInManager = signInManager;
             _userManager = userManager;
         }
 
-
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<ActionResult> GetAsync(string userId)
         {
-            return Ok(_roleManager.Roles.ToList());
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(roles);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(string id)
+        [HttpPost]
+        public async Task<ActionResult> CreateAsync(string userId, string roleName)
         {
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityRole role = await _roleManager.FindByNameAsync(roleName);
 
             if (role == null)
             {
                 return NotFound();
             }
 
-            return Ok(role);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateAsync(string name)
-        {
-            var role = new IdentityRole(name);
-            IdentityResult result = await _roleManager.CreateAsync(role);
+            IdentityResult result = await _userManager.AddToRoleAsync(user, roleName);
 
             if (!result.Succeeded)
             {
                 return StatusCode(500, result.Errors);
             }
 
-            return StatusCode(201, role);
-        }
+            IList<string> roles = await _userManager.GetRolesAsync(user);
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody]IdentityRole role)
-        {
-            IdentityRole roleEntity = await _roleManager.FindByIdAsync(role.Id);
-
-            if (roleEntity == null)
-            {
-                return NotFound();
-            }
-
-            roleEntity.Name = role.Name ?? roleEntity.Name;
-
-            IdentityResult result = await _roleManager.UpdateAsync(roleEntity);
-
-            if (!result.Succeeded)
-            {
-                return StatusCode(500, result.Errors);
-            }
-
-            return Ok(roleEntity);
+            return StatusCode(201, roles);
         }
 
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsyn(string id)
+        public async Task<ActionResult> DeleteAsync(string userId, string roleName)
         {
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityRole role = await _roleManager.FindByNameAsync(roleName);
 
             if (role == null)
             {
                 return NotFound();
             }
 
-            IdentityResult result = await _roleManager.DeleteAsync(role);
+            IdentityResult result = await _userManager.RemoveFromRoleAsync(user, roleName);
 
             if (!result.Succeeded)
             {
@@ -100,6 +91,5 @@ namespace AuthApi.Controllers
 
             return Ok(result);
         }
-
     }
 }
