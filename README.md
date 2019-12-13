@@ -1,6 +1,6 @@
 
 
-# Sample Program
+# Identity Server - Sample Program
 
 The purpose of this sample is to understand your capabilities, speed, understanding of the technologies and your internal development style.
 
