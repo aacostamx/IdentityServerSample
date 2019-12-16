@@ -59,10 +59,23 @@ namespace IdentityServer
             builder.AddDeveloperSigningCredential();
 
             services.AddAuthentication();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("https://localhost:5002")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
         }
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseCors("default");
+
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

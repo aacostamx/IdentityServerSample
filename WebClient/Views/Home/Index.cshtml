@@ -8,24 +8,137 @@
 </div>
 
 
-@using Microsoft.AspNetCore.Authentication
+@*@using Microsoft.AspNetCore.Authentication
 
-<h2>Claims</h2>
+    <h2>Claims</h2>
 
-<dl>
-    @foreach (var claim in User.Claims)
-    {
-        <dt>@claim.Type</dt>
-        <dd>@claim.Value</dd>
-    }
-</dl>
+    <dl>
+        @foreach (var claim in User.Claims)
+        {
+            <dt>@claim.Type</dt>
+            <dd>@claim.Value</dd>
+        }
+    </dl>
 
-<h2>Properties</h2>
+    <h2>Properties</h2>
 
-<dl>
-    @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
-    {
-        <dt>@prop.Key</dt>
-        <dd>@prop.Value</dd>
-    }
-</dl>
+    <dl>
+        @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
+        {
+            <dt>@prop.Key</dt>
+            <dd>@prop.Value</dd>
+        }
+    </dl>*@
+
+
+<script>
+    $(document).ready(function () {
+
+        //$.ajax({
+        //    url: 'https://localhost:5002/client/getuserasync',
+        //    async: true,
+        //    success: function (data, textStatus, jQxhr) {
+        //        console.log(data);
+        //    },
+        //    error: function (jqXhr, textStatus, errorThrown) {
+        //        console.log(errorThrown);
+        //        console.log(textStatus);
+        //        console.log(jqXhr);
+        //    }
+        //});
+
+        $.ajax({
+            url: "/Client/GetUser",
+            async: false,
+            success: function (response) {
+                console.log(response);
+            }
+        });
+
+
+
+
+        //localStorage.removeItem('bearer');
+        //var bearerToken = getAccessToken();
+
+        //function getAccessToken() {
+        //    var currentToken = localStorage.getItem('bearer');
+        //    if (!currentToken) {
+        //        var params = "grant_type=client_credentials&scope=auth_api&client_id=client&client_secret=511536EF-F270-4058-80CA-1C89C192F69A";
+
+        //        $.ajax({
+        //            url: 'https://localhost:5000/connect/token',
+        //            async: false,
+        //            type: 'post',
+        //            contentType: 'application/x-www-form-urlencoded',
+        //            data: params,
+        //            success: function (data, textStatus, jQxhr) {
+
+        //                localStorage.setItem('bearer', data.access_token);
+        //                currentToken = data.access_token;
+        //            },
+        //            error: function (jqXhr, textStatus, errorThrown) {
+        //                console.log(errorThrown);
+        //                console.log(textStatus);
+        //                console.log(jqXhr);
+        //            }
+        //        });
+        //    }
+
+        //    return currentToken;
+        //}
+
+        //function refreshAccessToken(callback) {
+        //    localStorage.removeItem('bearer');
+        //    var bearerToken = getAccessToken();
+        //    callback(bearerToken);
+        //}
+
+        //$.ajax({
+        //    url: "https://localhost:5001/api/User",
+        //    headers: {
+        //        "Authorization": "Bearer " + bearerToken
+        //    },
+        //    success: function (response) {
+        //        console.log(response);
+        //    },
+        //    error: function (xhr, status, error) {
+        //        if (xhr.status == 401) {
+        //            refreshAccessToken(this);
+        //        }
+        //        console.log(xhr);
+        //        console.log(status);
+        //        console.log(error);
+        //    }
+        //});
+
+
+        //$.ajax({
+        //    type: "GET",
+        //    contentType: "application/json",
+        //    dataType: "json",
+        //    url: 'https://localhost:5001/api/User',
+        //    success: function success(data) {
+        //        console.log(data);
+        //    },
+        //    error: function error(xhr, data, err) {
+        //        console.log(xhr);
+        //        console.log(data);
+        //        console.log(err);
+        //    }
+        //});
+
+        //$.ajax({
+        //    url: 'https://localhost:5001/api/User',
+        //    async: false,
+        //    type: 'get',
+        //    headers: {
+        //        'Authorization': `Bearer ${bearerToken} `,
+        //    },
+        //    method: 'GET',
+        //    success: function (data) {
+        //        console.log('succes: ' + data);
+        //    }
+        //});
+    });
+</script>

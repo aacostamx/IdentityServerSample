@@ -21,6 +21,18 @@ namespace AuthApi.Controllers
             _userManager = userManager;
         }
 
+
+        //[HttpPost]
+        //public async Task<ActionResult> GetTokenAsync()
+        //{
+        //    //var tokenClient = new TokenClient(disco.TokenEndpoint, "ro.angular", "secret");
+        //    //var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(model.UserName, model.Password, "api1 openid");
+
+
+        //    return Ok();
+        //}
+
+
         [HttpPost]
         public async Task<ActionResult> AuthenticateAsync([FromBody]LoginModel login)
         {
